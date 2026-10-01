@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZenFlow Yoga | Find Your Inner Balance</title>
+<meta name="description" content="ZenFlow — a modern yoga sanctuary. Hatha, Vinyasa and meditation classes in the Wellness District. Your first class is free.">
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Fonts: Lora (display) + Karla (body) + IBM Plex Mono (labels) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Lora', 'Georgia', 'serif'],
+          sans: ['Karla', 'sans-serif'],
+          mono: ['"IBM Plex Mono"', 'monospace'],
+        },
+        colors: {
+          moss:  { 950:'#0E1511', 900:'#131C16', 800:'#1A2820', 700:'#233427' },
+          linen: { 100:'#EDE9DB', 200:'#E0DBCB', 300:'#C8C2AE', 500:'#8E8A79' },
+          sage:  { 200:'#D3E0C2', 300:'#BBCDA4', 400:'#9FB886', 500:'#7E9A66', 600:'#65804F' },
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  html { scroll-padding-top: 88px; }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #0E1511; }
+  ::-webkit-scrollbar-thumb { background: #2C3B30; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #7E9A66; }
+
+  /* ---------- Labels ---------- */
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: .8rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    letter-spacing: .35em; text-transform: uppercase;
+    color: #9FB886; font-weight: 500;
+  }
+  .eyebrow::before { content: ''; width: 22px; height: 1px; background: rgba(159,184,134,.6); }
+  .m-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9.5px;
+    letter-spacing: .18em; text-transform: uppercase; color: #8E8A79;
+  }
+
+  /* ---------- Nav ---------- */
+  #siteNav {
+    background: rgba(14, 21, 17, .78);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(237, 233, 219, .07);
+  }
+  #siteNav.scrolled { background: rgba(14, 21, 17, .96); }
+  .nav-row { padding-top: 1rem; padding-bottom: 1rem; transition: padding .35s ease; }
+  #siteNav.scrolled .nav-row { padding-top: .55rem; padding-bottom: .55rem; }
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: ''; position: absolute; left: 0; bottom: -5px; height: 1px;
+    width: 0; background: #9FB886; transition: width .3s ease;
+  }
+  .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+  .nav-link.active { color: #BBCDA4; }
+
+  /* ---------- Buttons & fields ---------- */
+  .btn-sage, .btn-ghost {
+    display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+    padding: 1rem 2.2rem; border-radius: 999px; cursor: pointer;
+    font-family: Karla, sans-serif; font-weight: 600; font-size: 11px;
+    letter-spacing: .2em; text-transform: uppercase; transition: all .3s ease;
+  }
+  .btn-sage { background: #9FB886; color: #131C16; }
+  .btn-sage:hover { background: #BBCDA4; transform: translateY(-1px); }
+  .btn-sage:disabled { opacity: .7; cursor: wait; transform: none; }
+  .btn-ghost { border: 1px solid rgba(237,233,219,.22); color: #EDE9DB; background: rgba(237,233,219,.03); }
+  .btn-ghost:hover { border-color: rgba(159,184,134,.6); color: #BBCDA4; }
+
+  .field {
+    width: 100%; padding: .85rem 1.1rem; background: #0E1511;
+    border: 1px solid rgba(237,233,219,.14); border-radius: .8rem;
+    color: #EDE9DB; font-size: .9rem; font-family: Karla; outline: none;
+    transition: border-color .25s ease, box-shadow .25s ease;
+  }
+  .field::placeholder { color: #8E8A79; }
+  .field:focus { border-color: #9FB886; box-shadow: 0 0 0 3px rgba(159,184,134,.14); }
+  select.field option { background: #131C16; color: #EDE9DB; }
+  .flash { border-color: #9FB886 !important; box-shadow: 0 0 0 3px rgba(159,184,134,.18); }
+
+  /* ---------- Scroll reveals ---------- */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity .85s cubic-bezier(.16,1,.3,1), transform .85s cubic-bezier(.16,1,.3,1);
+    will-change: opacity, transform;
+  }
+  .reveal.active { opacity: 1; transform: translateY(0); }
+
+  /* ---------- Breathing orb & yantra ---------- */
+  .spin-slower { animation: spinSlower 170s linear infinite; }
+  @keyframes spinSlower { to { transform: rotate(360deg); } }
+
+  /* ---------- Map pin pulse ---------- */
+  .map-pulse { transform-box: fill-box; transform-origin: center; animation: mapPulse 2.6s ease-out infinite; }
+  @keyframes mapPulse { 0% { transform: scale(.6); opacity: .9; } 70% { transform: scale(2.5); opacity: 0; } 100% { opacity: 0; } }
+
+  /* ---------- Scroll cue float ---------- */
+  .float-y { animation: floatY 3.5s ease-in-out infinite; }
+  @keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
+
+  /* ---------- Lightbox ---------- */
+  #lightbox .lb-fade { opacity: 0; transition: opacity .3s ease; }
+  #lightbox #lbImg { opacity: 0; transform: scale(.96); transition: opacity .3s ease, transform .35s cubic-bezier(.16,1,.3,1); }
+  #lightbox.open .lb-fade { opacity: 1; }
+  #lightbox.open #lbImg { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spin-slower, .map-pulse, .float-y { animation: none !important; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+
+<body class="bg-moss-950 text-linen-200 font-sans antialiased overflow-x-clip selection:bg-sage-400 selection:text-moss-950">
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[95] transition-all duration-400 opacity-0 translate-y-6 pointer-events-none">
+  <div class="relative bg-linen-100 text-moss-900 pl-4 pr-5 py-3.5 rounded-2xl flex items-center gap-3.5 shadow-2xl">
+    <button id="toastClose" class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-moss-900 text-linen-100 grid place-items-center" aria-label="Dismiss">
+      <i class="fa-solid fa-xmark text-[10px]"></i>
+    </button>
+    <span class="w-7 h-7 shrink-0 rounded-full bg-sage-400 grid place-items-center"><i class="fa-solid fa-check text-[11px]"></i></span>
+    <div class="pr-4">
+      <p id="toastTitle" class="text-sm font-bold">Mat reserved</p>
+      <p id="toastSub" class="text-[11px] text-moss-900/70 leading-snug"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== NAV ===================== -->
+<nav id="siteNav" class="fixed top-0 inset-x-0 z-50">
+  <div class="nav-row max-w-6xl mx-auto px-6 flex items-center justify-between">
+
+    <a href="#home" class="flex items-center gap-2 font-display text-[24px] leading-none">
+      <span class="text-linen-100 font-semibold tracking-wide">ZEN</span>
+      <span id="logoDot" class="inline-block w-[4px] h-[4px] rounded-full bg-sage-400 will-change-transform"></span>
+      <span class="text-sage-300 italic font-medium tracking-wide">FLOW</span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-9 font-semibold uppercase text-[10.5px] tracking-[0.22em] text-linen-300">
+      <a href="#home" class="nav-link hover:text-linen-100 transition-colors">Home</a>
+      <a href="#about" class="nav-link hover:text-linen-100 transition-colors">About</a>
+      <a href="#classes" class="nav-link hover:text-linen-100 transition-colors">Classes</a>
+      <a href="#gallery" class="nav-link hover:text-linen-100 transition-colors">Gallery</a>
+      <a href="#contact" class="nav-link hover:text-linen-100 transition-colors">Contact</a>
+    </div>
+
+    <a href="#book" class="hidden md:inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-sage-400 text-moss-900 font-bold text-[10.5px] uppercase tracking-[0.18em] hover:bg-sage-300 hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-lg shadow-sage-400/15">
+      Book Now
+    </a>
+
+    <button id="mobileMenuBtn" class="md:hidden text-linen-200 hover:text-sage-300 p-2 focus:outline-none" aria-label="Toggle menu">
+      <i class="fa-solid fa-bars text-lg" id="menuToggleIcon"></i>
+    </button>
+  </div>
+
+  <div id="mobileDrawer" class="hidden md:hidden px-6 pt-2 pb-8 bg-moss-950/97 border-b border-linen/10 backdrop-blur-xl">
+    <div class="flex flex-col gap-4 font-semibold uppercase text-[11px] tracking-[0.22em] text-linen-300">
+      <a href="#home" class="mobile-nav-link py-2 hover:text-sage-300">Home</a>
+      <a href="#about" class="mobile-nav-link py-2 hover:text-sage-300">About</a>
+      <a href="#classes" class="mobile-nav-link py-2 hover:text-sage-300">Classes</a>
+      <a href="#gallery" class="mobile-nav-link py-2 hover:text-sage-300">Gallery</a>
+      <a href="#contact" class="mobile-nav-link py-2 hover:text-sage-300">Contact</a>
+      <a href="#book" class="mobile-nav-link text-center w-full mt-2 py-3.5 rounded-full bg-sage-400 text-moss-900 font-bold tracking-[0.2em] uppercase">
+        Book Now
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<header id="home" class="relative min-h-[94vh] flex items-center overflow-hidden pt-32 pb-20">
+  <!-- faint circle on the left, echoing the breath -->
+  <div class="pointer-events-none absolute -left-[300px] top-1/2 -translate-y-1/2 w-[620px] h-[620px] rounded-full border border-linen/[0.05] hidden lg:block"></div>
+
+  <div class="relative max-w-6xl mx-auto px-6 w-full grid lg:grid-cols-12 gap-16 lg:gap-8 items-center">
+
+    <!-- Left: message -->
+    <div class="lg:col-span-6">
+      <div class="reveal" data-delay="60">
+        <span class="eyebrow">Yoga · Meditation · Breathwork</span>
+      </div>
+
+      <h1 class="reveal mt-7 font-display font-medium text-linen-100 text-6xl sm:text-7xl xl:text-[5.6rem] leading-[1.02] tracking-[-0.01em]" data-delay="150">
+        Elevate your<br>
+        <span class="italic text-sage-300 font-medium">spirit.</span>
+      </h1>
+
+      <p class="reveal mt-7 max-w-md text-base sm:text-lg font-light leading-relaxed text-linen-200/85" data-delay="280">
+        Experience the ancient art of yoga in a modern sanctuary
+        designed for your peace of mind.
+      </p>
+
+      <div class="reveal mt-10 flex flex-col sm:flex-row gap-4" data-delay="400">
+        <a href="#classes" class="btn-sage">Explore Classes</a>
+        <a href="#book" class="btn-ghost">Reserve Your Mat</a>
+      </div>
+
+      <a id="nextClass" href="#classes" class="reveal mt-9 inline-flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-linen-300/70 hover:text-sage-300 transition-colors" data-delay="500"></a>
+    </div>
+
+    <!-- Right: the breathing guide -->
+    <div class="lg:col-span-6 reveal" data-delay="240">
+      <div class="relative max-w-[480px] mx-auto py-10">
+
+        <!-- Yantra backdrop -->
+        <svg viewBox="-320 -320 640 640" class="spin-slower absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[420px] sm:h-[420px] lg:w-[520px] lg:h-[520px] text-sage-400 opacity-[0.16] pointer-events-none" aria-hidden="true">
+          <g fill="none" stroke="currentColor" stroke-width="1">
+            <circle r="300"/><circle r="260"/><circle r="170"/>
+            <g id="yantraPetals"></g>
+            <polygon points="0,-140 121.2,70 -121.2,70"/>
+            <polygon points="0,140 121.2,-70 -121.2,-70"/>
+            <circle r="9" fill="currentColor" stroke="none"/>
+          </g>
+        </svg>
+
+        <!-- Orb -->
+        <div id="breathStage" class="relative w-[270px] h-[270px] sm:w-[320px] sm:h-[320px] mx-auto">
+          <div id="orbHalo" class="absolute inset-0 rounded-full border border-dashed border-sage-400/30 will-change-transform"></div>
+          <div id="orbCore" class="absolute inset-[13%] rounded-full bg-sage-400/[0.07] border border-sage-400/50 grid place-items-center will-change-transform">
+            <div class="text-center px-6">
+              <p id="breathPhase" class="font-display italic text-2xl sm:text-3xl text-linen-100">Breathe</p>
+              <p id="breathTimer" class="mt-2.5 font-mono text-[11px] tracking-[0.35em] uppercase text-sage-300">with us</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-9 flex flex-col items-center gap-4">
+          <button id="breathToggle" class="btn-ghost !px-8 !py-3.5">Begin Breathing</button>
+          <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-linen-300/50 text-center">Eight slow breaths. That's all.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll cue -->
+  <a href="#about" class="float-y absolute bottom-8 left-1/2 -translate-x-1/2 w-11 h-11 rounded-full border border-linen/15 grid place-items-center text-linen-300 hover:border-sage-400/50 hover:text-sage-300 transition-colors" aria-label="Scroll to About">
+    <i class="fa-solid fa-arrow-down text-xs"></i>
+  </a>
+</header>
+
+<!-- ===================== ABOUT ===================== -->
+<section id="about" class="py-24 lg:py-32 border-t border-linen/[0.06]">
+  <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+
+    <div class="reveal relative pb-10 lg:pb-0">
+      <div class="rounded-[2rem] overflow-hidden border border-linen/10 shadow-[0_28px_60px_-30px_rgba(0,0,0,0.6)]">
+        <img src="https://images.unsplash.com/photo-1517363898874-737b62a7db91?w=900&auto=format&fit=crop&q=80" alt="Yoga practice in the studio" loading="lazy" draggable="false" class="w-full h-[360px] sm:h-[460px] object-cover">
+      </div>
+      <div class="absolute -bottom-2 left-5 sm:-left-6 right-8 bg-moss-800 border border-linen/10 rounded-2xl px-6 py-5 shadow-xl rotate-[-1.2deg]">
+        <p class="font-display italic text-lg text-linen-100 leading-snug">&ldquo;Close the studio door, and the city goes quiet.&rdquo;</p>
+        <p class="m-label mt-2.5 !text-linen-300/60">— Mara E. · founder &amp; lead teacher</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="reveal" data-delay="80">
+        <span class="eyebrow">About ZenFlow</span>
+        <h2 class="mt-5 font-display text-3xl sm:text-5xl font-medium text-linen-100 leading-[1.08]">
+          Our story &amp;<br><span class="italic text-sage-300">philosophy.</span>
+        </h2>
+      </div>
+
+      <p class="reveal mt-7 max-w-xl text-sm sm:text-base font-light leading-relaxed text-linen-200/80" data-delay="160">
+        At ZenFlow, we believe yoga is for everyone. Our mission is to provide a space
+        where you can disconnect from the noise of the world and reconnect with your
+        inner self.
+      </p>
+
+      <ul class="reveal mt-9 border-y border-linen/10 divide-y divide-linen/10" data-delay="240">
+        <li class="group flex items-center gap-5 py-5">
+          <span class="w-11 h-11 shrink-0 rounded-full border border-sage-400/30 bg-sage-400/10 text-sage-300 grid place-items-center group-hover:bg-sage-400 group-hover:text-moss-900 transition-colors duration-300">
+            <i class="fa-solid fa-seedling text-sm"></i>
+          </span>
+          <div>
+            <p class="text-linen-100 font-semibold">Mindful Hatha Foundations</p>
+            <p class="text-[13px] font-light text-linen-300/60 mt-0.5">Rooted beginnings — posture by posture.</p>
+          </div>
+        </li>
+        <li class="group flex items-center gap-5 py-5">
+          <span class="w-11 h-11 shrink-0 rounded-full border border-sage-400/30 bg-sage-400/10 text-sage-300 grid place-items-center group-hover:bg-sage-400 group-hover:text-moss-900 transition-colors duration-300">
+            <i class="fa-solid fa-sun text-sm"></i>
+          </span>
+          <div>
+            <p class="text-linen-100 font-semibold">Modern Vinyasa Energy</p>
+            <p class="text-[13px] font-light text-linen-300/60 mt-0.5">Breath-led, rhythmic movement.</p>
+          </div>
+        </li>
+        <li class="group flex items-center gap-5 py-5">
+          <span class="w-11 h-11 shrink-0 rounded-full border border-sage-400/30 bg-sage-400/10 text-sage-300 grid place-items-center group-hover:bg-sage-400 group-hover:text-moss-900 transition-colors duration-300">
+            <i class="fa-solid fa-heart text-sm"></i>
+          </span>
+          <div>
+            <p class="text-linen-100 font-semibold">Holistic Wellness Approach</p>
+            <p class="text-[13px] font-light text-linen-300/60 mt-0.5">Care for the whole self — on and off the mat.</p>
+          </div>
+        </li>
+      </ul>
+
+      <p class="reveal mt-7 font-mono text-[10px] uppercase tracking-[0.2em] text-linen-300/50" data-delay="300">
+        Est. 2016 <span class="text-sage-400 mx-1">·</span> 12 certified teachers <span class="text-sage-400 mx-1">·</span> 500+ members
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CLASSES ===================== -->
+<section id="classes" class="py-24 lg:py-28 bg-moss-900/60 border-y border-linen/[0.06]">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-10">
+      <div>
+        <span class="eyebrow">Practice</span>
+        <h2 class="mt-4 font-display text-3xl sm:text-5xl font-medium text-linen-100">Our Classes</h2>
+      </div>
+      <p class="m-label">All levels welcome — mats &amp; props provided</p>
+    </div>
+
+    <!-- Timetable header -->
+    <div class="reveal hidden lg:grid grid-cols-12 gap-6 pb-3 border-b border-linen/10 m-label" data-delay="80">
+      <span class="col-span-5">Class</span>
+      <span class="col-span-3">Focus</span>
+      <span class="col-span-2">Schedule</span>
+      <span class="col-span-2 text-right">Reserve</span>
+    </div>
+
+    <div class="reveal" data-delay="140">
+
+      <article class="group grid lg:grid-cols-12 gap-5 lg:gap-6 items-center py-8 border-b border-linen/10 hover:bg-sage-400/[0.04] rounded-lg transition-colors">
+        <div class="lg:col-span-5 flex items-start gap-5">
+          <span class="w-12 h-12 shrink-0 rounded-2xl border border-sage-400/30 bg-sage-400/10 text-sage-300 grid place-items-center group-hover:bg-sage-400 group-hover:text-moss-900 transition-colors duration-300">
+            <i class="fa-solid fa-seedling"></i>
+          </span>
+          <div>
+            <h3 class="font-display text-2xl font-medium text-linen-100">Hatha Yoga</h3>
+            <p class="text-sm font-light text-linen-300/70 mt-1 max-w-sm">Perfect for beginners. Focus on basic postures and breathing.</p>
+          </div>
+        </div>
+        <div class="lg:col-span-3 flex flex-wrap gap-2">
+          <span class="font-mono text-[9px] uppercase tracking-[0.15em] border border-linen/15 rounded-full px-3 py-1 text-linen-300/70">Gentle</span>
+          <span class="font-mono text-[9px] uppercase tracking-[0.15em] border border-linen/15 rounded-full px-3 py-1 text-linen-300/70">60 min</span>
+        </div>
+        <p class="lg:col-span-2 font-mono text-[11px] tracking-[0.08em] text-sage-300/90">Mon · Wed · Fri<br>07:00</p>
+        <div class="lg:col-span-2 lg:text-right">
+          <button class="reserve-btn btn-ghost !px-6 !py-3" data-class="Hatha Yoga">Reserve a Mat</button>
+        </div>
+      </article>
+
+      <article class="group grid lg:grid-cols-12 gap-5 lg:gap-6 items-center py-8 border-b border-linen/10 hover:bg-sage-400/[0.04] rounded-lg transition-colors">
+        <div class="lg:col-span-5 flex items-start gap-5">
+          <span class="w-12 h-12 shrink-0 rounded-2xl border border-sage-400/30 bg-sage-400/10 text-sage-300 grid place-items-center group-hover:bg-sage-400 group-hover:text-moss-900 transition-colors duration-300">
+            <i class="fa-solid fa-fire"></i>
+          </span>
+          <div>
+            <h3 class="font-display text-2xl font-medium text-linen-100">Vinyasa Flow</h3>
+            <p class="text-sm font-light text-linen-300/70 mt-1 max-w-sm">A rhythmic sequence of poses synchronized with the breath.</p>
+          </div>
+        </div>
+        <div class="lg:col-span-3 flex flex-wrap gap-2">
+          <span class="font-mono text-[9px] uppercase tracking-[0.15em] border border-linen/15 rounded-full px-3 py-1 text-linen-300/70">Dynamic</span>
+          <span class="font-mono text-[9px] uppercase tracking-[0.15em] border border-linen/15 rounded-full px-3 py-1 text-linen-300/70">75 min</span>
+        </div>
+        <p class="lg:col-span-2 font-mono text-[11px] tracking-[0.08em] text-sage-300/90">Tue · Thu 18:30<br>Sat 09:00</p>
+        <div class="lg:col-span-2 lg:text-right">
+          <button class="reserve-btn btn-ghost !px-6 !py-3" data-class="Vinyasa Flow">Reserve a Mat</button>
+        </div>
+      </article>
+
+      <article class="group grid lg:grid-cols-12 gap-5 lg:gap-6 items-center py-8 hover:bg-sage-400/[0.04] rounded-lg transition-colors">
+        <div class="lg:col-span-5 flex items-start gap-5">
+          <span class="w-12 h-12 shrink-0 rounded-2xl border border-sage-400/30 bg-sage-400/10 text-sage-300 grid place-items-center group-hover:bg-sage-400 group-hover:text-moss-900 transition-colors duration-300">
+            <i class="fa-solid fa-om"></i>
+          </span>
+          <div>
+            <h3 class="font-display text-2xl font-medium text-linen-100">Meditation</h3>
+            <p class="text-sm font-light text-linen-300/70 mt-1 max-w-sm">Deep relaxation sessions to reduce stress and improve clarity.</p>
+          </div>
+        </div>
+        <div class="lg:col-span-3 flex flex-wrap gap-2">
+          <span class="font-mono text-[9px] uppercase tracking-[0.15em] border border-linen/15 rounded-full px-3 py-1 text-linen-300/70">All levels</span>
+          <span class="font-mono text-[9px] uppercase tracking-[0.15em] border border-linen/15 rounded-full px-3 py-1 text-linen-300/70">45 min</span>
+        </div>
+        <p class="lg:col-span-2 font-mono text-[11px] tracking-[0.08em] text-sage-300/90">Sun 18:00<br>Thu 12:15</p>
+        <div class="lg:col-span-2 lg:text-right">
+          <button class="reserve-btn btn-ghost !px-6 !py-3" data-class="Meditation">Reserve a Mat</button>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GALLERY ===================== -->
+<section id="gallery" class="py-24 lg:py-28">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-12">
+      <div>
+        <span class="eyebrow">Moments</span>
+        <h2 class="mt-4 font-display text-3xl sm:text-5xl font-medium text-linen-100">Studio Life</h2>
+      </div>
+      <p class="m-label">Tap any image to look closer</p>
+    </div>
+
+    <div class="reveal grid lg:grid-cols-12 gap-5" data-delay="120">
+
+      <figure class="group relative lg:col-span-7 h-[320px] sm:h-[420px] rounded-[1.6rem] overflow-hidden border border-linen/10 cursor-zoom-in" data-lb="0">
+        <img src="https://images.unsplash.com/photo-1676496962536-d8ef110ff6f0?q=80&w=1100&auto=format&fit=crop" alt="Studio interior in morning light" loading="lazy" draggable="false" class="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-[1100ms] ease-out">
+        <figcaption class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-moss-950/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <p class="font-mono text-[9.5px] uppercase tracking-[0.25em] text-sage-300">The main shala · morning light</p>
+        </figcaption>
+      </figure>
+
+      <figure class="group relative lg:col-span-5 h-[320px] sm:h-[420px] rounded-[1.6rem] overflow-hidden border border-linen/10 cursor-zoom-in" data-lb="1">
+        <img src="https://images.unsplash.com/photo-1532798442725-41036acc7489?q=80&w=900&auto=format&fit=crop" alt="Group meditation session" loading="lazy" draggable="false" class="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-[1100ms] ease-out">
+        <figcaption class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-moss-950/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <p class="font-mono text-[9.5px] uppercase tracking-[0.25em] text-sage-300">Tuesday meditation circle</p>
+        </figcaption>
+      </figure>
+
+      <div class="lg:col-span-5 h-[280px] sm:h-[320px] bg-moss-800 border border-linen/10 rounded-[1.6rem] p-8 flex flex-col justify-center">
+        <div class="flex gap-1.5 text-sage-400">
+          <i class="fa-solid fa-star text-[10px]"></i><i class="fa-solid fa-star text-[10px]"></i><i class="fa-solid fa-star text-[10px]"></i><i class="fa-solid fa-star text-[10px]"></i><i class="fa-solid fa-star text-[10px]"></i>
+        </div>
+        <p class="mt-5 font-display italic text-xl sm:text-2xl text-linen-100 leading-relaxed">&ldquo;I found my breath here — and somehow kept it.&rdquo;</p>
+        <p class="m-label mt-4 !text-linen-300/60">— Daniel M. · member since 2019</p>
+      </div>
+
+      <figure class="group relative lg:col-span-7 h-[280px] sm:h-[320px] rounded-[1.6rem] overflow-hidden border border-linen/10 cursor-zoom-in" data-lb="2">
+        <img src="https://images.unsplash.com/photo-1607962837359-5e7e89f86776?q=80&w=1100&auto=format&fit=crop" alt="Wellness lifestyle after practice" loading="lazy" draggable="false" class="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-[1100ms] ease-out">
+        <figcaption class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-moss-950/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <p class="font-mono text-[9.5px] uppercase tracking-[0.25em] text-sage-300">After practice · tea &amp; stillness</p>
+        </figcaption>
+      </figure>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACT & BOOKING ===================== -->
+<section id="contact" class="py-24 lg:py-28 bg-moss-900/60 border-y border-linen/[0.06]">
+  <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 lg:gap-20 items-start">
+
+    <!-- Visit -->
+    <div class="reveal">
+      <span class="eyebrow">Find us</span>
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl font-medium text-linen-100">Visit Our Studio</h2>
+
+      <div class="mt-9 space-y-6">
+        <div class="flex items-center gap-5">
+          <span class="w-11 h-11 shrink-0 rounded-xl bg-sage-400/10 border border-sage-400/25 text-sage-300 grid place-items-center text-sm"><i class="fa-solid fa-location-dot"></i></span>
+          <div>
+            <p class="m-label">Address</p>
+            <p class="mt-1 text-sm text-linen-100 font-medium">456 Serenity Blvd, Wellness District</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-5">
+          <span class="w-11 h-11 shrink-0 rounded-xl bg-sage-400/10 border border-sage-400/25 text-sage-300 grid place-items-center text-sm"><i class="fa-solid fa-phone"></i></span>
+          <div>
+            <p class="m-label">Phone</p>
+            <p class="mt-1 text-sm text-linen-100 font-medium">(555) 123-4567</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-5">
+          <span class="w-11 h-11 shrink-0 rounded-xl bg-sage-400/10 border border-sage-400/25 text-sage-300 grid place-items-center text-sm"><i class="fa-regular fa-clock"></i></span>
+          <div>
+            <p class="m-label">Hours</p>
+            <p class="mt-1 text-sm text-linen-100 font-medium">Every day · 06:30 – 21:30</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Illustrated map -->
+      <div class="mt-9 rounded-[1.4rem] border border-linen/10 bg-moss-950 p-3">
+        <svg viewBox="0 0 620 340" class="w-full h-auto rounded-xl" role="img" aria-label="Illustrated map of the Wellness District">
+          <g stroke="rgba(237,233,219,0.09)" stroke-width="10" stroke-linecap="round">
+            <line x1="0" y1="90" x2="620" y2="90"/>
+            <line x1="0" y1="215" x2="620" y2="215"/>
+            <line x1="150" y1="0" x2="150" y2="340"/>
+            <line x1="420" y1="0" x2="420" y2="340"/>
+          </g>
+          <line x1="0" y1="320" x2="620" y2="20" stroke="rgba(237,233,219,0.07)" stroke-width="7"/>
+          <g fill="rgba(159,184,134,0.06)" stroke="rgba(159,184,134,0.22)">
+            <rect x="170" y="108" width="90" height="88" rx="8"/>
+            <rect x="272" y="108" width="70" height="88" rx="8"/>
+            <rect x="170" y="233" width="172" height="88" rx="10"/>
+            <rect x="440" y="233" width="120" height="88" rx="10"/>
+            <rect x="440" y="108" width="120" height="88" rx="10"/>
+          </g>
+          <g fill="rgba(159,184,134,0.35)">
+            <circle cx="200" cy="265" r="6"/><circle cx="240" cy="295" r="5"/>
+            <circle cx="300" cy="262" r="6"/><circle cx="322" cy="300" r="4"/><circle cx="185" cy="305" r="4"/>
+          </g>
+          <path d="M40,300 C 120,290 140,240 200,190 S 330,150 388,150" fill="none" stroke="#BBCDA4" stroke-width="2" stroke-dasharray="1 8" stroke-linecap="round"/>
+          <circle class="map-pulse" cx="400" cy="150" r="14" fill="none" stroke="#9FB886" stroke-width="1.5"/>
+          <circle cx="400" cy="150" r="7" fill="#9FB886"/>
+          <circle cx="400" cy="150" r="2.5" fill="#0E1511"/>
+          <line x1="398" y1="122" x2="396" y2="141" stroke="rgba(187,205,164,0.4)" stroke-width="1"/>
+          <g>
+            <rect x="248" y="100" width="150" height="46" rx="10" fill="#131C16" stroke="rgba(237,233,219,0.18)"/>
+            <text x="323" y="120" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="2" fill="#BBCDA4">ZENFLOW STUDIO</text>
+            <text x="323" y="136" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8" letter-spacing="1.5" fill="#8E8A79">456 SERENITY BLVD</text>
+          </g>
+          <g transform="translate(575,42)">
+            <circle r="13" fill="none" stroke="rgba(237,233,219,0.15)"/>
+            <path d="M0,-6 L4,4 L0,1.5 L-4,4 Z" fill="rgba(187,205,164,0.7)"/>
+            <text y="27" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8" fill="#8E8A79">N</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="mt-4 flex items-center justify-between">
+        <p class="m-label !text-linen-300/40">Illustrated map · Wellness District</p>
+        <a href="https://maps.google.com/?q=456+Serenity+Blvd" target="_blank" rel="noopener" class="inline-flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-sage-300 hover:text-sage-200 transition-colors group">
+          Get directions <i class="fa-solid fa-arrow-right text-[9px] group-hover:translate-x-1 transition-transform"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Booking -->
+    <div id="book" class="reveal" data-delay="140">
+      <div class="bg-moss-800 border border-linen/10 rounded-[1.6rem] p-7 sm:p-10 shadow-[0_28px_60px_-35px_rgba(0,0,0,0.7)]">
+        <span class="eyebrow">Reserve your mat</span>
+        <h3 class="mt-4 font-display text-2xl sm:text-3xl font-medium text-linen-100">Begin your practice</h3>
+        <p class="mt-3 text-sm font-light text-linen-300/70">Tell us who you are and which class calls you — we'll hold a mat and send the details.</p>
+
+        <form id="bookingForm" class="mt-8 space-y-6" novalidate>
+          <div>
+            <label for="bkName" class="m-label block mb-2 !text-linen-300/60">Full name</label>
+            <input id="bkName" type="text" required autocomplete="name" placeholder="Aria Bennett" class="field">
+          </div>
+          <div>
+            <label for="bkEmail" class="m-label block mb-2 !text-linen-300/60">Email address</label>
+            <input id="bkEmail" type="email" required autocomplete="email" placeholder="aria@example.com" class="field">
+          </div>
+          <div>
+            <label for="classSelect" class="m-label block mb-2 !text-linen-300/60">Class</label>
+            <div class="relative">
+              <select id="classSelect" required class="field appearance-none pr-10 cursor-pointer">
+                <option value="" selected>Choose a class</option>
+                <option>Hatha Yoga</option>
+                <option>Vinyasa Flow</option>
+                <option>Meditation</option>
+                <option>First time — help me choose</option>
+              </select>
+              <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-sage-400/80 text-xs pointer-events-none"></i>
+            </div>
+          </div>
+
+          <button id="submitBtn" type="submit" class="btn-sage w-full">Confirm Booking</button>
+          <p class="text-center font-mono text-[9px] uppercase tracking-[0.28em] text-linen-300/40">Your first class is on us</p>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="bg-[#0B110D] pt-14 pb-8">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+      <div>
+        <a href="#home" class="flex items-center gap-2 font-display text-[24px] leading-none">
+          <span class="text-linen-100 font-semibold tracking-wide">ZEN</span>
+          <span class="w-[4px] h-[4px] rounded-full bg-sage-400"></span>
+          <span class="text-sage-300 italic font-medium tracking-wide">FLOW</span>
+        </a>
+        <p class="font-display italic text-lg text-linen-300/60 mt-3">Breathe in, log off.</p>
+      </div>
+
+      <div class="flex flex-wrap gap-x-8 gap-y-3 font-semibold uppercase text-[10.5px] tracking-[0.22em] text-linen-300/70">
+        <a href="#home" class="hover:text-sage-300 transition-colors">Home</a>
+        <a href="#about" class="hover:text-sage-300 transition-colors">About</a>
+        <a href="#classes" class="hover:text-sage-300 transition-colors">Classes</a>
+        <a href="#gallery" class="hover:text-sage-300 transition-colors">Gallery</a>
+        <a href="#contact" class="hover:text-sage-300 transition-colors">Contact</a>
+      </div>
+
+      <div class="flex items-center gap-6 text-linen-300/60">
+        <a href="https://instagram.com" target="_blank" rel="noopener" class="hover:text-sage-300 transition-colors" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://facebook.com" target="_blank" rel="noopener" class="hover:text-sage-300 transition-colors" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://youtube.com" target="_blank" rel="noopener" class="hover:text-sage-300 transition-colors" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+
+    <div class="border-t border-linen/10 mt-11 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-[11px] tracking-wide text-linen-300/45">&copy; 2026 WebNova Studio | RR Web Designers. All rights reserved.</p>
+      <p class="font-mono text-[9px] uppercase tracking-[0.32em] text-linen-300/30">Est. 2016 · Wellness District</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== LIGHTBOX ===================== -->
+<div id="lightbox" class="fixed inset-0 z-[90] hidden" role="dialog" aria-label="Image viewer">
+  <div id="lbBackdrop" class="lb-fade absolute inset-0 bg-[#0A100C]/95 backdrop-blur-sm"></div>
+  <button id="lbClose" class="lb-fade absolute top-5 right-5 sm:top-7 sm:right-7 w-11 h-11 rounded-full border border-linen/20 text-linen-100 hover:border-sage-400/60 hover:text-sage-300 grid place-items-center transition-colors z-10" aria-label="Close">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+  <div class="relative h-full flex flex-col items-center justify-center px-16 sm:px-24">
+    <img id="lbImg" src="" alt="" class="max-h-[72vh] max-w-full rounded-2xl border border-linen/10 shadow-2xl">
+    <p id="lbCap" class="mt-6 font-mono text-[10px] uppercase tracking-[0.3em] text-sage-300"></p>
+  </div>
+  <button id="lbPrev" class="lb-fade absolute left-4 sm:left-7 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border border-linen/20 text-linen-100 hover:border-sage-400/60 hover:text-sage-300 grid place-items-center transition-colors" aria-label="Previous image">
+    <i class="fa-solid fa-arrow-left text-sm"></i>
+  </button>
+  <button id="lbNext" class="lb-fade absolute right-4 sm:right-7 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border border-linen/20 text-linen-100 hover:border-sage-400/60 hover:text-sage-300 grid place-items-center transition-colors" aria-label="Next image">
+    <i class="fa-solid fa-arrow-right text-sm"></i>
+  </button>
+</div>
+
+<!-- ===================== SCRIPT ===================== -->
+<script>
+  const $  = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const NS = 'http://www.w3.org/2000/svg';
+
+  /* ---------- Toast ---------- */
+  const toast = $('#toast'), toastTitle = $('#toastTitle'), toastSub = $('#toastSub');
+  let toastTimer = null;
+  function showToast(title, sub = '') {
+    toastTitle.textContent = title;
+    toastSub.textContent = sub;
+    toast.classList.remove('opacity-0', 'translate-y-6');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.add('opacity-0', 'translate-y-6'), 4200);
+  }
+  $('#toastClose').addEventListener('click', () => toast.classList.add('opacity-0', 'translate-y-6'));
+
+  /* ---------- Yantra petals (generated) ---------- */
+  (function buildYantra() {
+    const g = $('#yantraPetals');
+    for (let i = 0; i < 12; i++) {
+      const p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', 'M0,-252 C 34,-236 34,-196 0,-176 C -34,-196 -34,-236 0,-252');
+      p.setAttribute('transform', `rotate(${i * 30})`);
+      g.appendChild(p);
+    }
+  })();
+
+  /* ---------- The breathing guide (signature moment) ---------- */
+  const PHASES = [
+    { name: 'Inhale', d: 4000 },
+    { name: 'Hold',   d: 4000 },
+    { name: 'Exhale', d: 6000 },
+    { name: 'Rest',   d: 2000 },
+  ];
+  const CYCLE = PHASES.reduce((s, p) => s + p.d, 0); // 16s per breath
+  const TARGET_BREATHS = 8;
+
+  const core = $('#orbCore'), halo = $('#orbHalo'), logoDot = $('#logoDot');
+  const phaseEl = $('#breathPhase'), timerEl = $('#breathTimer'), toggleBtn = $('#breathToggle');
+  const ease = x => -(Math.cos(Math.PI * x) - 1) / 2;
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  let running = false, finished = false, elapsed = 0, lastT = null, breaths = 0;
+  let lastPhaseTxt = '', lastCount = '';
+
+  function state() {
+    let within = elapsed % CYCLE, i = 0;
+    while (within >= PHASES[i].d) { within -= PHASES[i].d; i++; }
+    return { i, p: within / PHASES[i].d, remain: Math.ceil((PHASES[i].d - within) / 1000) };
+  }
+
+  function render() {
+    if (finished) return;
+    const s = state();
+    let scale = 0.82;
+    if (s.i === 0) scale = lerp(0.82, 1.18, ease(s.p));
+    else if (s.i === 1) scale = 1.18;
+    else if (s.i === 2) scale = lerp(1.18, 0.82, ease(s.p));
+
+    if (!RM) {
+      core.style.transform  = `scale(${scale.toFixed(4)})`;
+      halo.style.transform  = `scale(${(1 + (scale - 0.82) * 0.45).toFixed(4)})`;
+      logoDot.style.transform = `scale(${(1 + (scale - 0.82) * 0.9).toFixed(3)})`;
+      logoDot.style.opacity = (0.55 + (scale - 0.82) * 1.1).toFixed(2);
+    }
+
+    const txt = running ? PHASES[s.i].name : (elapsed > 0 ? 'Paused' : 'Breathe');
+    if (txt !== lastPhaseTxt) { phaseEl.textContent = txt; lastPhaseTxt = txt; }
+    const cnt = running ? String(s.remain) : (elapsed > 0 ? '· · ·' : 'with us');
+    if (cnt !== lastCount) { timerEl.textContent = cnt; lastCount = cnt; }
+  }
+
+  function finish() {
+    finished = true; running = false;
+    phaseEl.textContent = 'Complete';
+    timerEl.textContent = `${TARGET_BREATHS} breaths`;
+    if (!RM) { core.style.transform = 'scale(1.05)'; halo.style.transform = 'scale(1.08)'; }
+    logoDot.style.transform = 'scale(1)'; logoDot.style.opacity = '1';
+    toggleBtn.textContent = 'Begin Again';
+    showToast('Eight slow breaths — well done.', 'See you on the mat.');
+  }
+
+  function frame(t) {
+    if (lastT != null && running && !finished) elapsed += t - lastT;
+    lastT = t;
+    if (!finished) {
+      const nowBreaths = Math.floor(elapsed / CYCLE);
+      if (nowBreaths > breaths) {
+        breaths = nowBreaths;
+        if (breaths >= TARGET_BREATHS) finish();
+      }
+    }
+    render();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  toggleBtn.addEventListener('click', () => {
+    if (finished) {
+      finished = false; elapsed = 0; breaths = 0; running = true;
+      toggleBtn.textContent = 'Pause';
+    } else {
+      running = !running;
+      toggleBtn.textContent = running ? 'Pause' : 'Resume';
+    }
+  });
+
+  /* ---------- Next class (computed from real local time) ---------- */
+  const CLASSES = [
+    { name: 'Hatha Yoga',  times: [[1, 420], [3, 420], [5, 420]] },     // Mon Wed Fri 07:00
+    { name: 'Vinyasa Flow', times: [[2, 1110], [4, 1110], [6, 540]] }, // Tue Thu 18:30, Sat 09:00
+    { name: 'Meditation',  times: [[0, 1080], [3, 735]] },             // Sun 18:00, Thu 12:15
+  ];
+  const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const fmt = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+
+  (function nextClass() {
+    const now = new Date(), out = [];
+    for (let add = 0; add < 8; add++) {
+      const d = new Date(now); d.setDate(now.getDate() + add);
+      for (const c of CLASSES) for (const [day, mins] of c.times) {
+        if (d.getDay() !== day) continue;
+        const t = new Date(d); t.setHours(Math.floor(mins / 60), mins % 60, 0, 0);
+        if (t > now) out.push({ c, t, add, mins });
+      }
+    }
+    out.sort((a, b) => a.t - b.t);
+    if (!out.length) return;
+    const n = out[0];
+    const day = n.add === 0 ? 'Today' : n.add === 1 ? 'Tomorrow' : DAYS[n.t.getDay()];
+    $('#nextClass').innerHTML =
+      `Next on the mat — <span class="text-sage-300 font-medium">${n.c.name}</span> · ${day} ${fmt(n.mins)}
+       <i class="fa-solid fa-arrow-right text-[9px]"></i>`;
+  })();
+
+  /* ---------- Nav: scrolled + scroll-spy + mobile drawer ---------- */
+  const nav = $('#siteNav');
+  const navLinks = $$('.nav-link');
+  const spySections = ['home', 'about', 'classes', 'gallery', 'contact']
+    .map(id => document.getElementById(id)).filter(Boolean);
+
+  function onScroll() {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+    let current = 'home';
+    for (const sec of spySections) {
+      if (sec.id !== 'home' && sec.getBoundingClientRect().top <= 160) current = sec.id;
+    }
+    navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  const menuBtn = $('#mobileMenuBtn'), mDrawer = $('#mobileDrawer'), menuIcon = $('#menuToggleIcon');
+  menuBtn.addEventListener('click', () => {
+    mDrawer.classList.toggle('hidden');
+    menuIcon.className = mDrawer.classList.contains('hidden') ? 'fa-solid fa-bars text-lg' : 'fa-solid fa-xmark text-lg';
+  });
+  $$('.mobile-nav-link').forEach(a => a.addEventListener('click', () => {
+    mDrawer.classList.add('hidden');
+    menuIcon.className = 'fa-solid fa-bars text-lg';
+  }));
+
+  /* ---------- Scroll reveals ---------- */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      const el = en.target, delay = parseInt(el.dataset.delay || '0', 10);
+      el.classList.add('active');
+      setTimeout(() => { el.classList.remove('reveal', 'active'); el.style.transitionDelay = ''; }, 950 + delay);
+      io.unobserve(el);
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  $$('.reveal').forEach(el => {
+    if (el.dataset.delay) el.style.transitionDelay = el.dataset.delay + 'ms';
+    io.observe(el);
+  });
+
+  /* ---------- Reserve buttons prefill the booking form ---------- */
+  $$('.reserve-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sel = $('#classSelect');
+      sel.value = btn.dataset.class;
+      sel.classList.add('flash');
+      setTimeout(() => sel.classList.remove('flash'), 1600);
+      $('#book').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => $('#bkName').focus({ preventScroll: true }), 750);
+    });
+  });
+
+  /* ---------- Gallery lightbox ---------- */
+  const GALLERY = [
+    { img: 'https://images.unsplash.com/photo-1676496962536-d8ef110ff6f0?q=80&w=1500&auto=format&fit=crop',  cap: 'The main shala · morning light' },
+    { img: 'https://images.unsplash.com/photo-1532798442725-41036acc7489?q=80&w=1500&auto=format&fit=crop', cap: 'Tuesday meditation circle' },
+    { img: 'https://images.unsplash.com/photo-1607962837359-5e7e89f86776?q=80&w=1500&auto=format&fit=crop', cap: 'After practice · tea & stillness' },
+  ];
+  const lightbox = $('#lightbox'), lbImg = $('#lbImg'), lbCap = $('#lbCap');
+  let lbIdx = 0;
+
+  function lbShow(i) {
+    lbIdx = (i + GALLERY.length) % GALLERY.length;
+    lbImg.src = GALLERY[lbIdx].img;
+    lbImg.alt = GALLERY[lbIdx].cap;
+    lbCap.textContent = GALLERY[lbIdx].cap;
+  }
+  function lbOpen(i) {
+    lbShow(i);
+    lightbox.classList.remove('hidden');
+    requestAnimationFrame(() => requestAnimationFrame(() => lightbox.classList.add('open')));
+    document.body.style.overflow = 'hidden';
+  }
+  function lbClose() {
+    lightbox.classList.remove('open');
+    setTimeout(() => lightbox.classList.add('hidden'), 320);
+    document.body.style.overflow = '';
+  }
+  $$('[data-lb]').forEach(fig => fig.addEventListener('click', () => lbOpen(parseInt(fig.dataset.lb))));
+  $('#lbClose').addEventListener('click', lbClose);
+  $('#lbPrev').addEventListener('click', () => lbShow(lbIdx - 1));
+  $('#lbNext').addEventListener('click', () => lbShow(lbIdx + 1));
+  $('#lbBackdrop').addEventListener('click', lbClose);
+  document.addEventListener('keydown', e => {
+    if (lightbox.classList.contains('hidden')) return;
+    if (e.key === 'Escape') lbClose();
+    if (e.key === 'ArrowLeft') lbShow(lbIdx - 1);
+    if (e.key === 'ArrowRight') lbShow(lbIdx + 1);
+  });
+
+  /* ---------- Booking form ---------- */
+  const form = $('#bookingForm'), submitBtn = $('#submitBtn');
+  const SUBMIT_LABEL = submitBtn.innerHTML;
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    const cls = $('#classSelect').value;
+    const email = $('#bkEmail').value.trim();
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Reserving';
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = SUBMIT_LABEL;
+      form.reset();
+      showToast('Mat reserved', `${cls} — details on their way to ${email}`);
+    }, 1000);
+  });
+</script>
+</body>
+</html>
